@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quark Energy Group — Project Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --g900:#064E3B;--g800:#065F46;--g700:#047857;--g600:#059669;--g500:#10B981;
+  --g400:#34D399;--g300:#6EE7B7;--g200:#A7F3D0;--g100:#D1FAE5;--g50:#ECFDF5;
+  --white:#fff;
+  --s50:#F8FAFC;--s100:#F1F5F9;--s200:#E2E8F0;--s300:#CBD5E1;--s400:#94A3B8;
+  --s500:#64748B;--s600:#475569;--s700:#334155;--s800:#1E293B;--s900:#0F172A;
+  --amber:#D97706;--amb-lt:#FFFBEB;--amb-md:#FDE68A;
+  --red:#DC2626;--red-lt:#FEF2F2;--red-md:#FECACA;
+  --blue:#2563EB;--blue-lt:#EFF6FF;--blue-md:#BFDBFE;
+  --sh-sm:0 1px 3px rgba(5,150,105,.08),0 1px 2px rgba(0,0,0,.04);
+  --sh-md:0 8px 24px rgba(5,150,105,.12),0 3px 8px rgba(0,0,0,.06);
+  --sh-lg:0 16px 40px rgba(5,150,105,.15),0 6px 12px rgba(0,0,0,.08);
+  --sans:'Inter',sans-serif;
+}
+html,body{height:100%;background:var(--s50);color:var(--s900);font-family:var(--sans);font-size:13px;-webkit-font-smoothing:antialiased;}
+
+/* TOPBAR */
+.topbar{height:66px;background:linear-gradient(135deg,var(--g900),var(--g800) 55%,var(--g700));display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:300;border-bottom:3px solid var(--g400);box-shadow:0 2px 18px rgba(4,78,59,.5);}
+.brand{display:flex;align-items:center;gap:13px;}
+.brand-logo{width:46px;height:46px;border-radius:11px;background:var(--white);display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:900;font-size:7.5px;color:var(--g700);line-height:1.25;text-align:center;border:2px solid rgba(255,255,255,.25);box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.brand-name{font-size:17px;font-weight:900;color:#fff;letter-spacing:-.02em;}
+.brand-name span{color:rgba(255,255,255,.58);}
+.brand-sub{font-size:10px;color:rgba(255,255,255,.52);margin-top:2px;}
+.topbar-r{display:flex;align-items:center;gap:9px;}
+.live-pill{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--g300);background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.28);padding:4px 10px;border-radius:20px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--g400);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.5);}50%{box-shadow:0 0 0 5px transparent;}}
+.user-pill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.11);border:1.5px solid rgba(255,255,255,.18);border-radius:9px;padding:5px 11px 5px 6px;}
+.ava{width:28px;height:28px;border-radius:7px;background:var(--g600);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;}
+.user-pill span{font-size:11.5px;font-weight:600;color:#fff;}
+.clock{font-size:11px;font-weight:600;color:rgba(255,255,255,.68);font-variant-numeric:tabular-nums;}
+.contact-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.18);border-radius:9px;padding:5px 11px;}
+.contact-pill a{font-size:11px;font-weight:600;color:var(--g300);text-decoration:none;}
+.contact-pill svg{flex-shrink:0;}
+
+/* LAYOUT */
+.wrap{display:flex;height:calc(100vh - 66px);}
+
+/* SIDEBAR */
+.sidebar{width:242px;flex-shrink:0;background:linear-gradient(180deg,var(--s800),var(--s900));display:flex;flex-direction:column;overflow-y:auto;border-right:1px solid rgba(255,255,255,.06);}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px;}
+.nav-stripe{height:3px;background:linear-gradient(90deg,var(--g500) 65%,var(--s600) 35%);flex-shrink:0;}
+.nav-label{padding:15px 13px 5px;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g300);opacity:.75;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 13px;cursor:pointer;border-left:3px solid transparent;transition:all .14s;color:rgba(255,255,255,.52);font-size:12px;font-weight:500;user-select:none;}
+.nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9);}
+.nav-item.active{background:rgba(16,185,129,.17);color:var(--g300);border-left-color:var(--g400);}
+.nav-item svg{width:14px;height:14px;stroke:currentColor;flex-shrink:0;}
+.nav-cnt{margin-left:auto;font-size:10px;font-weight:700;background:rgba(16,185,129,.22);color:var(--g300);padding:2px 7px;border-radius:10px;}
+.nav-div{height:1px;background:rgba(255,255,255,.06);margin:5px 0;}
+.sb-foot{margin-top:auto;padding:13px;font-size:9px;color:rgba(255,255,255,.22);text-align:center;border-top:1px solid rgba(255,255,255,.06);line-height:1.6;}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.page{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.page.active{display:flex;}
+
+/* PAGE HEADER */
+.ph{padding:16px 22px 13px;background:var(--white);border-bottom:1px solid var(--s200);box-shadow:var(--sh-sm);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+.ph-title{font-size:16px;font-weight:800;color:var(--s900);letter-spacing:-.02em;}
+.ph-sub{font-size:11px;color:var(--s400);margin-top:2px;}
+.ph-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:9px 17px;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;}
+.btn svg{width:13px;height:13px;stroke:currentColor;flex-shrink:0;}
+.btn-g{background:var(--g600);color:#fff;box-shadow:0 2px 8px rgba(5,150,105,.35);}
+.btn-g:hover{background:var(--g700);box-shadow:0 4px 14px rgba(5,150,105,.45);}
+.btn-o{background:var(--white);color:var(--s600);border:1.5px solid var(--s200);}
+.btn-o:hover{border-color:var(--g300);color:var(--g600);background:var(--g50);}
+.btn-d{background:var(--s700);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.22);}
+.btn-d:hover{background:var(--s800);}
+.btn-sm{padding:6px 13px;font-size:11px;}
+
+/* PAGE BODY */
+.pb{flex:1;overflow-y:auto;padding:20px 22px;}
+.pb::-webkit-scrollbar{width:4px;}
+.pb::-webkit-scrollbar-thumb{background:var(--s300);border-radius:4px;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--s200);border-radius:12px;box-shadow:var(--sh-sm);margin-bottom:18px;overflow:hidden;}
+.card-h{padding:13px 17px;border-bottom:1px solid var(--s100);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:13px;font-weight:700;color:var(--s800);}
+.card-sub{font-size:11px;color:var(--s400);margin-top:1px;}
+.card-b{padding:15px 17px;}
+
+/* KPI */
+.kpi{background:var(--white);border:1px solid var(--s200);border-radius:12px;padding:16px 17px;position:relative;overflow:hidden;box-shadow:var(--sh-sm);transition:box-shadow .18s,transform .18s;cursor:default;}
+.kpi:hover{box-shadow:var(--sh-md);transform:translateY(-1px);}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,var(--g500));border-radius:12px 12px 0 0;}
+.kpi.cg{--kc:var(--g500);}
+.kpi.ca{--kc:var(--amber);}
+.kpi.cb{--kc:var(--blue);}
+.kpi.cs{--kc:var(--s500);}
+.kpi-ico{width:33px;height:33px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:9px;}
+.kpi-ico svg{width:15px;height:15px;}
+.kpi-ico.ig{background:var(--g50);border:1px solid var(--g100);}
+.kpi-ico.ig svg{stroke:var(--g600);}
+.kpi-ico.ia{background:var(--amb-lt);border:1px solid var(--amb-md);}
+.kpi-ico.ia svg{stroke:var(--amber);}
+.kpi-ico.ib{background:var(--blue-lt);border:1px solid var(--blue-md);}
+.kpi-ico.ib svg{stroke:var(--blue);}
+.kpi-ico.is{background:var(--s100);border:1px solid var(--s200);}
+.kpi-ico.is svg{stroke:var(--s600);}
+.kpi-label{font-size:10px;font-weight:600;color:var(--s400);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.kpi-val{font-size:26px;font-weight:900;color:var(--s900);letter-spacing:-.03em;}
+.kpi-note{font-size:10px;color:var(--g600);font-weight:600;margin-top:3px;}
+
+/* ROLE CARDS */
+.rc{background:var(--white);border:1px solid var(--s200);border-radius:13px;box-shadow:var(--sh-sm);overflow:hidden;transition:box-shadow .18s,transform .18s;cursor:pointer;}
+.rc:hover{box-shadow:var(--sh-md);transform:translateY(-2px);}
+.rc-h{padding:15px 18px;display:flex;align-items:center;gap:13px;border-bottom:1px solid var(--s100);}
+.rc-ico{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rc-ico svg{width:19px;height:19px;}
+.rc-title{font-size:13px;font-weight:800;color:var(--s900);}
+.rc-tag{font-size:10px;font-weight:600;color:var(--s400);margin-top:2px;text-transform:uppercase;letter-spacing:.06em;}
+.rc-b{padding:14px 18px;}
+.rc-desc{font-size:12px;color:var(--s600);line-height:1.7;margin-bottom:12px;}
+.rc-tasks{display:flex;flex-direction:column;gap:7px;}
+.rc-task{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--s700);}
+.rc-dot{width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.rc-f{padding:11px 18px;background:var(--s50);border-top:1px solid var(--s100);display:flex;align-items:center;justify-content:space-between;}
+.rc-stat{text-align:center;}
+.rc-stat-v{font-size:17px;font-weight:900;color:var(--s900);}
+.rc-stat-l{font-size:9px;font-weight:600;color:var(--s400);text-transform:uppercase;letter-spacing:.06em;margin-top:1px;}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--s500);padding:9px 13px;background:var(--s50);border-bottom:2px solid var(--s200);text-align:left;}
+.tbl td{padding:10px 13px;border-bottom:1px solid var(--s100);font-size:12px;color:var(--s700);vertical-align:middle;}
+.tbl tbody tr:hover{background:var(--g50);}
+.tbl tbody tr:last-child td{border-bottom:none;}
+.tbl-wrap{overflow-x:auto;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 9px;border-radius:20px;text-transform:uppercase;}
+.bg{background:var(--g50);color:var(--g700);border:1px solid var(--g200);}
+.bs{background:var(--s100);color:var(--s600);border:1px solid var(--s200);}
+.ba{background:var(--amb-lt);color:var(--amber);border:1px solid var(--amb-md);}
+.br{background:var(--red-lt);color:var(--red);border:1px solid var(--red-md);}
+.bb{background:var(--blue-lt);color:var(--blue);border:1px solid var(--blue-md);}
+.bd{background:var(--s800);color:#fff;border:1px solid var(--s700);}
+
+/* PROGRESS */
+.prog-w{background:var(--s100);border-radius:5px;height:7px;overflow:hidden;min-width:60px;}
+.prog-f{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--g600),var(--g400));transition:width .5s;}
+.prog-f.pa{background:linear-gradient(90deg,var(--amber),#FCD34D);}
+.prog-f.ps{background:linear-gradient(90deg,var(--s600),var(--s400));}
+
+/* TABS */
+.tabs{display:flex;gap:2px;padding:4px;background:var(--s100);border-radius:10px;}
+.tab-btn{padding:6px 15px;border-radius:7px;font-size:12px;font-weight:600;color:var(--s500);border:none;background:transparent;cursor:pointer;transition:all .14s;}
+.tab-btn.active{background:var(--white);color:var(--g600);box-shadow:var(--sh-sm);}
+.tab-c{display:none;}
+.tab-c.active{display:block;}
+
+/* EDITABLE AREA */
+.ea{background:var(--s50);border:2px dashed var(--g300);border-radius:10px;padding:15px 17px;min-height:76px;position:relative;transition:border-color .18s,background .18s;margin-bottom:18px;}
+.ea:hover{border-color:var(--g500);background:var(--g50);}
+.ea-label{position:absolute;top:-10px;left:13px;background:var(--white);padding:0 7px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g600);border:1px solid var(--g200);border-radius:4px;}
+.ea-hint{font-size:11px;color:var(--s400);font-style:italic;margin-bottom:9px;}
+.entry-list{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.entry-item{display:flex;align-items:flex-start;gap:9px;background:var(--white);border:1px solid var(--s200);border-radius:8px;padding:9px 12px;}
+.e-dot{width:7px;height:7px;border-radius:50%;background:var(--g500);margin-top:5px;flex-shrink:0;}
+.e-txt{font-size:12px;color:var(--s700);flex:1;}
+.e-date{font-size:10px;color:var(--s400);margin-left:auto;flex-shrink:0;}
+.e-del{background:none;border:none;cursor:pointer;color:var(--s300);font-size:13px;padding:0 2px;transition:color .14s;line-height:1;}
+.e-del:hover{color:var(--g500);}
+.note-row{display:flex;gap:7px;margin-top:10px;}
+.note-row input{flex:1;}
+
+/* FORM */
+.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.fgrp{display:flex;flex-direction:column;gap:5px;}
+.fgrp.full{grid-column:1/-1;}
+.fgrp.span2{grid-column:span 2;}
+.flbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--s500);}
+.finp,.fsel,.ftxt{background:var(--white);border:1.5px solid var(--s200);border-radius:8px;padding:8px 12px;font-family:var(--sans);font-size:12px;color:var(--s800);outline:none;transition:border-color .18s,box-shadow .18s;width:100%;}
+.finp:focus,.fsel:focus,.ftxt:focus{border-color:var(--g400);box-shadow:0 0 0 3px rgba(5,150,105,.08);}
+.ftxt{resize:vertical;min-height:76px;}
+.fsel{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:calc(100% - 11px) center;}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:15px;width:590px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;box-shadow:var(--sh-lg);animation:mIn .2s ease;}
+@keyframes mIn{from{transform:translateY(16px) scale(.97);opacity:0;}to{transform:none;opacity:1;}}
+.m-head{padding:18px 20px 14px;border-bottom:1px solid var(--s200);display:flex;align-items:center;justify-content:space-between;}
+.m-title{font-size:15px;font-weight:800;color:var(--s900);}
+.m-close{width:29px;height:29px;border:none;background:var(--s100);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--s500);transition:background .14s;}
+.m-close:hover{background:var(--s200);}
+.m-body{padding:18px 20px;overflow-y:auto;flex:1;}
+.m-foot{padding:13px 20px 18px;border-top:1px solid var(--s100);display:flex;justify-content:flex-end;gap:8px;}
+
+/* ALERTS */
+.al{display:flex;align-items:flex-start;gap:11px;border-radius:10px;padding:11px 13px;margin-bottom:9px;}
+.al.alg{background:var(--g50);border:1px solid var(--g200);}
+.al.ala{background:var(--amb-lt);border:1px solid var(--amb-md);}
+.al.als{background:var(--s50);border:1px solid var(--s200);}
+.al.alb{background:var(--blue-lt);border:1px solid var(--blue-md);}
+.al svg{flex-shrink:0;margin-top:1px;}
+.al-t{font-size:12px;font-weight:700;color:var(--s800);}
+.al-s{font-size:11px;color:var(--s500);margin-top:2px;}
+
+/* LIST ITEMS */
+.li-item{display:flex;align-items:flex-start;gap:11px;padding:11px 15px;border-bottom:1px solid var(--s100);transition:background .14s;}
+.li-item:hover{background:var(--g50);}
+.li-item:last-child{border-bottom:none;}
+.li-ico{width:33px;height:33px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.li-ico svg{width:15px;height:15px;}
+.li-ico.lg{background:var(--g50);border:1px solid var(--g100);}
+.li-ico.lg svg{stroke:var(--g500);}
+.li-ico.ls{background:var(--s100);border:1px solid var(--s200);}
+.li-ico.ls svg{stroke:var(--s600);}
+.li-body{flex:1;}
+.li-t{font-size:12px;font-weight:700;color:var(--s800);}
+.li-s{font-size:11px;color:var(--s400);margin-top:2px;}
+
+/* TOAST */
+.toast-c{position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:7px;}
+.toast{background:var(--s900);color:#fff;padding:11px 16px;border-radius:10px;font-size:12px;font-weight:600;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:7px;animation:tin .28s ease;max-width:290px;}
+.toast.ok{background:var(--g800);}
+.toast.err{background:#991B1B;}
+@keyframes tin{from{transform:translateY(18px);opacity:0;}to{transform:none;opacity:1;}}
+
+/* TECH BADGES */
+.tech-b{display:inline-flex;align-items:center;gap:4px;background:var(--g50);border:1px solid var(--g200);color:var(--g700);font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;margin:3px 3px 3px 0;}
+
+/* EMPTY */
+.empty-row td{text-align:center;color:var(--s400);padding:28px;font-size:12px;}
+
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr);}.g2,.g3{grid-template-columns:1fr;}.fg{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.sidebar{display:none;}.topbar{padding:0 12px;}.brand-sub,.clock{display:none;}.g4{grid-template-columns:1fr 1fr;gap:10px;}.pb{padding:13px 11px;}.ph{flex-wrap:wrap;gap:8px;padding:11px 13px;}.fg,.fg2{grid-template-columns:1fr;}.modal{width:100%;max-width:100%;border-radius:15px 15px 0 0;margin:auto 0 0;}.overlay{align-items:flex-end;}.toast-c{right:11px;left:11px;}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-logo">⚡<br>QUARK</div>
+    <div>
+      <div class="brand-name">Quark <span>Energy Group</span></div>
+      <div class="brand-sub">Green Energy Project Management · Taiwan</div>
+    </div>
+  </div>
+  <div class="topbar-r">
+    <div class="live-pill"><span class="dot"></span>Live</div>
+    <div class="user-pill">
+      <div class="ava">QE</div>
+      <span>Project Team</span>
+    </div>
+    <div class="clock" id="clk">--:--</div>
+    <div class="contact-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="2" width="11" height="11"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span style="font-size:11px;font-weight:700;color:#fff;">Bandile Dlamini</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--g300)" stroke-width="2" width="11" height="11"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.22 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      <a href="tel:+886900167900">+886 900 167 900</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="nav-stripe"></div>
+  <div class="nav-label">Overview</div>
+  <div class="nav-item active" id="nav-dashboard" onclick="nav('dashboard')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Dashboard
+  </div>
+  <div class="nav-div"></div>
+  <div class="nav-label">Core Operations</div>
+  <div class="nav-item" id="nav-cases" onclick="nav('cases')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+    Case Management
+    <span class="nav-cnt" id="nc-cases">0</span>
+  </div>
+  <div class="nav-item" id="nav-market" onclick="nav('market')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Market Analysis &amp; Quotes
+    <span class="nav-cnt" id="nc-market">0</span>
+  </div>
+  <div class="nav-item" id="nav-briefings" onclick="nav('briefings')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+    Business Briefings
+    <span class="nav-cnt" id="nc-briefings">0</span>
+  </div>
+  <div class="nav-item" id="nav-reports" onclick="nav('reports')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    Business Reports
+    <span class="nav-cnt" id="nc-reports">0</span>
+  </div>
+  <div class="nav-item" id="nav-inspections" onclick="nav('inspections')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    Site Inspections
+    <span class="nav-cnt" id="nc-inspections">0</span>
+  </div>
+  <div class="nav-div"></div>
+  <div class="nav-label">Company</div>
+  <div class="nav-item" id="nav-about" onclick="nav('about')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    About Quark Energy
+  </div>
+  <div class="sb-foot">Made by Bandile Dlamini<br>+886 900 167 900</div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="page active" id="page-dashboard">
+  <div class="ph">
+    <div>
+      <div class="ph-title">🌱 Quark Energy Group Dashboard</div>
+      <div class="ph-sub">Renewable Energy Project Management · Taiwan</div>
+    </div>
+    <div class="ph-actions">
+      <span class="badge bs" id="dash-date" style="font-size:11px;padding:5px 11px;"></span>
+      <button class="btn btn-g" onclick="nav('cases');openModal('modal-case')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Case
+      </button>
+    </div>
+  </div>
+  <div class="pb">
+    <div class="g4" style="margin-bottom:20px;">
+      <div class="kpi cg">
+        <div class="kpi-ico ig"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
+        <div class="kpi-label">Active Cases</div>
+        <div class="kpi-val" id="kpi-cases">0</div>
+        <div class="kpi-note">In progress</div>
+      </div>
+      <div class="kpi ca">
+        <div class="kpi-ico ia"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <div class="kpi-label">Market Evaluations</div>
+        <div class="kpi-val" id="kpi-market">0</div>
+        <div class="kpi-note">Logged</div>
+      </div>
+      <div class="kpi cb">
+        <div class="kpi-ico ib"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
+        <div class="kpi-label">Briefings Prepared</div>
+        <div class="kpi-val" id="kpi-briefings">0</div>
+        <div class="kpi-note">This period</div>
+      </div>
+      <div class="kpi cs">
+        <div class="kpi-ico is"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="kpi-label">Site Inspections</div>
+        <div class="kpi-val" id="kpi-inspections">0</div>
+        <div class="kpi-note">Completed</div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;color:var(--s800);margin-bottom:12px;">Core Responsibility Areas</div>
+    <div class="g2" style="margin-bottom:20px;">
+      <div class="rc" onclick="nav('cases')">
+        <div class="rc-h">
+          <div class="rc-ico" style="background:var(--g50);border:1px solid var(--g100);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
+          <div style="flex:1;">
+            <div class="rc-title">Case Management</div>
+            <div class="rc-tag">Area 1 — Progress &amp; Follow-Up</div>
+          </div>
+          <span class="badge bg">Core</span>
+        </div>
+        <div class="rc-b">
+          <div class="rc-desc">Manage progress, follow-up, and reporting of each energy construction case from initiation to completion.</div>
+          <div class="rc-tasks">
+            <div class="rc-task"><div class="rc-dot" style="background:var(--g500);"></div>Track each case milestone and progress status</div>
+            <div class="rc-task"><div class="rc-dot" style="background:var(--g400);"></div>Follow up on pending action items and deadlines</div>
+            <div class="rc-task"><div class="rc-dot" style="background:var(--g300);"></div>Prepare and submit progress reports per case</div>
+          </div>
+        </div>
+        <div class="rc-f">
+          <div class="rc-stat"><div class="rc-stat-v" id="rc-total">0</div><div class="rc-stat-l">Total</div></div>
+          <div class="rc-stat"><div class="rc-stat-v" id="rc-active">0</div><div class="rc-stat-l">Active</div></div>
+          <div class="rc-stat"><div class="rc-stat-v" id="rc-done">0</div><div class="rc-stat-l">Completed</div></div>
+        </div>
+      </div>
+      <div class="rc" onclick="nav('market')">
+        <div class="rc-h">
+          <div class="rc-ico" style="background:var(--amb-lt);border:1px solid var(--amb-md);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <div style="flex:1;">
+            <div class="rc-title">Market Analysis &amp; Quotation</div>
+            <div class="rc-tag">Area 2 — Evaluation &amp; Pricing</div>
+          </div>
+          <span class="badge ba">Analysis</span>
+        </div>
+        <div class="rc-b">
+          <div class="rc-desc">Collect basic case information, conduct market analysis, evaluate solar energy projects, and prepare quotations.</div>
+          <div class="rc-tasks">
+            <div class="rc-task"><div class="rc-dot" style="background:var(--amber);"></div>Collect site and client information</div>
+            <div class="rc-task"><div class="rc-dot" style="background:var(--amber);"></div>Conduct market and feasibility analysis</div>
+            <div class="rc-task"><div class="rc-dot" style="background:var(--amb-md);"></div>Prepare competitive quotations for clients</div>
+          </div>
+        </div>
+        <div class="rc-f">
+          <div class="rc-stat"><div class="rc-stat-v" id="rc-evals">0</div><div class="rc-stat-l">Evaluations</div></div>
+          <div class="rc-stat"><div class="rc-stat-v" id="rc-quotes">0</div><div class="rc-stat-l">Quotes</div></div>
+          <div class="rc-stat"><div class="rc-stat-v" id="rc-accepted">0</div><div class="rc-stat-l">Accepted</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-h"><div><div class="card-title">Quick Actions</div><div class="card-sub">Jump to key tasks</div></div></div>
+        <div class="card-b" style="display:flex;gap:9px;flex-wrap:wrap;">
+          <button class="btn btn-g" onclick="nav('cases');openModal('modal-case')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Case</button>
+          <button class="btn btn-d" onclick="nav('market');openModal('modal-eval')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Evaluation</button>
+          <button class="btn btn-o" onclick="nav('briefings');openModal('modal-brief')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Briefing</button>
+          <button class="btn btn-o" onclick="nav('inspections');openModal('modal-insp')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Log Inspection</button>
+          <button class="btn btn-o" onclick="nav('reports');openModal('modal-report')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Prepare Report</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><div class="card-title">Recent Activity</div><div class="card-sub">Latest actions</div></div></div>
+        <div id="activity-feed">
+          <div class="li-item">
+            <div class="li-ico ls"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+            <div class="li-body"><div class="li-t">System Ready</div><div class="li-s">Quark Energy Group system initialized</div></div>
+            <span class="badge bg" style="margin-left:auto;flex-shrink:0;">Live</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CASE MANAGEMENT ═══ -->
+<div class="page" id="page-cases">
+  <div class="ph">
+    <div><div class="ph-title">Case Management</div><div class="ph-sub">Area 1 — Progress, follow-up and reporting of each energy project case</div></div>
+    <div class="ph-actions">
+      <button class="btn btn-g" onclick="openModal('modal-case')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Case</button>
+    </div>
+  </div>
+  <div class="pb">
+    <div class="card">
+      <div class="card-h"><div><div class="card-title">Case Tracker</div><div class="card-sub">All active and completed energy project cases</div></div></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Case #</th><th>Project Name</th><th>Client</th><th>Type</th><th>Location</th><th>Capacity</th><th>Progress</th><th>Status</th></tr></thead>
+          <tbody id="tb-cases"><tr class="empty-row"><td colspan="8">No cases yet — click "New Case" to begin.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="ea">
+      <div class="ea-label">Progress &amp; Follow-Up Notes</div>
+      <div class="ea-hint">Add progress updates, milestone completions, or follow-up actions here.</div>
+      <ul class="entry-list" id="el-cases"></ul>
+      <div class="note-row"><input class="finp" id="ni-cases" placeholder="e.g. Site survey completed for QE-0001, civil permit pending…"><button class="btn btn-g btn-sm" onclick="addNote('el-cases','ni-cases')">Add</button></div>
+    </div>
+    <div class="ea">
+      <div class="ea-label">Case Reporting Log</div>
+      <div class="ea-hint">Record submitted reports, recipients, and key findings shared with stakeholders.</div>
+      <ul class="entry-list" id="el-caserep"></ul>
+      <div class="note-row"><input class="finp" id="ni-caserep" placeholder="e.g. Monthly progress report for QE-0003 submitted to PM…"><button class="btn btn-g btn-sm" onclick="addNote('el-caserep','ni-caserep')">Add</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MARKET ANALYSIS ═══ -->
+<div class="page" id="page-market">
+  <div class="ph">
+    <div><div class="ph-title">Market Analysis &amp; Quotation</div><div class="ph-sub">Area 2 — Collect case info, conduct market analysis, evaluate projects and prepare quotations</div></div>
+    <div class="ph-actions">
+      <div class="tabs">
+        <button class="tab-btn active" id="mkt-tab-info" onclick="switchTab('mkt','info',this)">Case Info</button>
+        <button class="tab-btn" id="mkt-tab-evals" onclick="switchTab('mkt','evals',this)">Evaluations</button>
+        <button class="tab-btn" id="mkt-tab-quotes" onclick="switchTab('mkt','quotes',this)">Quotations</button>
+      </div>
+      <button class="btn btn-g" id="mkt-add-btn" onclick="openModal('modal-caseinfo')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Collect Info</button>
+    </div>
+  </div>
+  <div class="pb">
+    <div class="tab-c active" id="mkt-info">
+      <div class="card">
+        <div class="card-h"><div><div class="card-title">Basic Case Information</div><div class="card-sub">Initial client and site data gathered for evaluation</div></div></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Ref #</th><th>Client</th><th>Contact</th><th>Site Address</th><th>Roof/Land Type</th><th>Area (m²)</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody id="tb-caseinfo"><tr class="empty-row"><td colspan="8">No case info yet — click "Collect Info" to begin.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ea">
+        <div class="ea-label">Market Research Notes</div>
+        <div class="ea-hint">Add market trends, regulatory updates, feed-in tariff changes, or competitor intelligence.</div>
+        <ul class="entry-list" id="el-market"></ul>
+        <div class="note-row"><input class="finp" id="ni-market" placeholder="e.g. New MOEA subsidy announced for rooftop solar Q3 2026…"><button class="btn btn-g btn-sm" onclick="addNote('el-market','ni-market')">Add</button></div>
+      </div>
+    </div>
+    <div class="tab-c" id="mkt-evals">
+      <div class="card">
+        <div class="card-h">
+          <div><div class="card-title">Case Evaluations</div></div>
+          <button class="btn btn-g btn-sm" onclick="openModal('modal-eval')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Evaluation</button>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Eval #</th><th>Case / Client</th><th>System Type</th><th>Capacity (kW)</th><th>Est. Gen. (kWh/yr)</th><th>Payback (yrs)</th><th>IRR (%)</th><th>Status</th></tr></thead>
+            <tbody id="tb-evals"><tr class="empty-row"><td colspan="8">No evaluations yet — click "Add Evaluation".</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="tab-c" id="mkt-quotes">
+      <div class="card">
+        <div class="card-h">
+          <div><div class="card-title">Quotation Log</div></div>
+          <button class="btn btn-g btn-sm" onclick="openModal('modal-quote')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Quote</button>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Quote #</th><th>Client</th><th>System Type</th><th>Capacity</th><th>Total (NTD)</th><th>Valid Until</th><th>Issued</th><th>Status</th></tr></thead>
+            <tbody id="tb-quotes"><tr class="empty-row"><td colspan="8">No quotations yet — click "New Quote".</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ea">
+        <div class="ea-label">Quotation Notes &amp; Follow-ups</div>
+        <div class="ea-hint">Log client feedback, revision requests, or special pricing conditions.</div>
+        <ul class="entry-list" id="el-quotes"></ul>
+        <div class="note-row"><input class="finp" id="ni-quotes" placeholder="e.g. Client requested revised quote with battery storage option…"><button class="btn btn-g btn-sm" onclick="addNote('el-quotes','ni-quotes')">Add</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BRIEFINGS ═══ -->
+<div class="page" id="page-briefings">
+  <div class="ph">
+    <div><div class="ph-title">Business Briefings &amp; Visual Presentations</div><div class="ph-sub">Area 3 — Prepare concise and effective business briefings and visual presentations</div></div>
+    <div class="ph-actions">
+      <button class="btn btn-g" onclick="openModal('modal-brief')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Briefing</button>
+    </div>
+  </div>
+  <div class="pb">
+    <div class="card">
+      <div class="card-h"><div><div class="card-title">Briefing Records</div></div></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Brief #</th><th>Title</th><th>Case / Project</th><th>Audience</th><th>Format</th><th>Prepared By</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody id="tb-briefings"><tr class="empty-row"><td colspan="8">No briefings yet — click "New Briefing" to begin.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="ea">
+      <div class="ea-label">Briefing Content &amp; Key Points</div>
+      <div class="ea-hint">Add key messages, talking points, visual slide ideas, or client-specific communication notes.</div>
+      <ul class="entry-list" id="el-brief"></ul>
+      <div class="note-row"><input class="finp" id="ni-brief" placeholder="e.g. Slide 3: Include 20-year ROI chart for the Tainan agricultural solar case…"><button class="btn btn-g btn-sm" onclick="addNote('el-brief','ni-brief')">Add</button></div>
+    </div>
+    <div class="ea">
+      <div class="ea-label">Presentation Visual Notes</div>
+      <div class="ea-hint">Log visual assets needed, infographic ideas, chart types, or design feedback from stakeholders.</div>
+      <ul class="entry-list" id="el-visuals"></ul>
+      <div class="note-row"><input class="finp" id="ni-visuals" placeholder="e.g. Create site layout diagram for QE-0002 using satellite imagery…"><button class="btn btn-g btn-sm" onclick="addNote('el-visuals','ni-visuals')">Add</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REPORTS ═══ -->
+<div class="page" id="page-reports">
+  <div class="ph">
+    <div><div class="ph-title">Business Reports</div><div class="ph-sub">Area 4 — Regularly prepare and distribute relevant business reports</div></div>
+    <div class="ph-actions">
+      <button class="btn btn-g" onclick="openModal('modal-report')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Prepare Report</button>
+    </div>
+  </div>
+  <div class="pb">
+    <div class="card">
+      <div class="card-h"><div><div class="card-title">Report Register</div><div class="card-sub">All business reports prepared and distributed</div></div></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Report #</th><th>Title</th><th>Type</th><th>Period</th><th>Prepared By</th><th>Distributed To</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody id="tb-reports"><tr class="empty-row"><td colspan="8">No reports yet — click "Prepare Report" to begin.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="ea">
+      <div class="ea-label">Key Findings</div>
+      <div class="ea-hint">Log important findings, KPIs, or data highlights from each report for quick reference.</div>
+      <ul class="entry-list" id="el-findings"></ul>
+      <div class="note-row"><input class="finp" id="ni-findings" placeholder="e.g. Q2 2026: 3 new rooftop solar cases closed, total 1.2 MW capacity…"><button class="btn btn-g btn-sm" onclick="addNote('el-findings','ni-findings')">Add</button></div>
+    </div>
+    <div class="ea">
+      <div class="ea-label">Distribution Notes</div>
+      <div class="ea-hint">Track who received each report, feedback received, and follow-up actions requested.</div>
+      <ul class="entry-list" id="el-dist"></ul>
+      <div class="note-row"><input class="finp" id="ni-dist" placeholder="e.g. Monthly ESG report emailed to CEO and sustainability team on 2026-06-30…"><button class="btn btn-g btn-sm" onclick="addNote('el-dist','ni-dist')">Add</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ INSPECTIONS ═══ -->
+<div class="page" id="page-inspections">
+  <div class="ph">
+    <div><div class="ph-title">On-Site Project Inspections</div><div class="ph-sub">Area 5 — Conduct and document on-site inspections of energy project sites</div></div>
+    <div class="ph-actions">
+      <button class="btn btn-g" onclick="openModal('modal-insp')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Log Inspection</button>
+    </div>
+  </div>
+  <div class="pb">
+    <div class="card">
+      <div class="card-h"><div><div class="card-title">Inspection Log</div><div class="card-sub">On-site visits and inspection records</div></div></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Insp #</th><th>Case / Project</th><th>Site Address</th><th>Inspector</th><th>Date</th><th>Type</th><th>Technology</th><th>Finding</th><th>Status</th></tr></thead>
+          <tbody id="tb-inspections"><tr class="empty-row"><td colspan="9">No inspections yet — click "Log Inspection" to begin.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="ea">
+      <div class="ea-label">Inspection Findings &amp; Observations</div>
+      <div class="ea-hint">Document site conditions, structural assessments, shading analysis, or solar irradiance observations.</div>
+      <ul class="entry-list" id="el-insp"></ul>
+      <div class="note-row"><input class="finp" id="ni-insp" placeholder="e.g. Roof slope 15°, south-facing, no major shading — suitable for 50kW system…"><button class="btn btn-g btn-sm" onclick="addNote('el-insp','ni-insp')">Add</button></div>
+    </div>
+    <div class="ea">
+      <div class="ea-label">Action Items from Inspections</div>
+      <div class="ea-hint">Record action items — engineering concerns, permit requirements, or client follow-ups.</div>
+      <ul class="entry-list" id="el-inspact"></ul>
+      <div class="note-row"><input class="finp" id="ni-inspact" placeholder="e.g. Structural reinforcement required — flagged for civil engineer review…"><button class="btn btn-g btn-sm" onclick="addNote('el-inspact','ni-inspact')">Add</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div class="page" id="page-about">
+  <div class="ph">
+    <div><div class="ph-title">About Quark Energy Group</div><div class="ph-sub">Company profile, services, and green energy commitment</div></div>
+  </div>
+  <div class="pb">
+    <div class="g2" style="margin-bottom:18px;">
+      <div class="card">
+        <div class="card-h"><div class="card-title">Company Overview</div></div>
+        <div class="card-b">
+          <div class="al alg" style="margin-bottom:11px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            <div><div class="al-t">Large-Scale Energy Construction Developer</div><div class="al-s">Integrated renewable energy industry development across Taiwan</div></div>
+          </div>
+          <p style="font-size:12px;color:var(--s600);line-height:1.8;margin-bottom:10px;">Quark Energy Group is a professional large-scale energy construction project developer providing integrated services through a highly professional team encompassing site development, civil engineering, green energy integration, green electricity and certificate sales, and ESG sustainability product implementation.</p>
+          <p style="font-size:12px;color:var(--s600);line-height:1.8;">Dedicated to creating a green, smart, safe, and clean environment — fully committed to the development and maintenance of green energy across Taiwan in response to global climate change and greenhouse gas reduction trends.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div class="card-title">Required Skills &amp; Experience</div></div>
+        <div class="card-b">
+          <div class="li-item" style="padding:10px 0;">
+            <div class="li-ico lg"><svg viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+            <div class="li-body"><div class="li-t">Solar Energy Technology</div><div class="li-s">Familiarity with solar energy-related technologies or relevant experience — required</div></div>
+          </div>
+          <div class="li-item" style="padding:10px 0;border-bottom:none;">
+            <div class="li-ico ls"><svg viewBox="0 0 24 24" fill="none" stroke="var(--s600)" stroke-width="2"><path d="M2 20h.01M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg></div>
+            <div class="li-body"><div class="li-t">Engineering Background Preferred</div><div class="li-s">Engineering-related experience preferred for project management and site inspection roles</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-title">Integrated Green Energy Services</div></div>
+      <div class="card-b">
+        <div class="g3">
+          <div class="al alg"><svg viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><div><div class="al-t">Site Development</div><div class="al-s">Site assessment, land acquisition support, and regulatory permitting</div></div></div>
+          <div class="al alg"><svg viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2" width="16" height="16"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg><div><div class="al-t">Civil Engineering</div><div class="al-s">Structural design, civil works, and green energy facility integration</div></div></div>
+          <div class="al ala"><svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg><div><div class="al-t">Green Electricity &amp; RECs</div><div class="al-s">Sales of green electricity and renewable energy certificates</div></div></div>
+          <div class="al alb"><svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" width="16" height="16"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg><div><div class="al-t">ESG Sustainability</div><div class="al-s">Implementation of ESG sustainability products aligned with global climate commitments</div></div></div>
+          <div class="al als"><svg viewBox="0 0 24 24" fill="none" stroke="var(--s600)" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><div><div class="al-t">Project Development</div><div class="al-s">End-to-end large-scale energy construction project development</div></div></div>
+          <div class="al als"><svg viewBox="0 0 24 24" fill="none" stroke="var(--s600)" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><div><div class="al-t">Operation &amp; Maintenance</div><div class="al-s">Long-term maintenance and operational safety management</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-title">Contact &amp; Credits</div></div>
+      <div class="card-b" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--s700);"><strong>Made by:</strong> Bandile Dlamini</div>
+        <div style="font-size:13px;color:var(--s700);"><strong>Phone:</strong> <a href="tel:+886900167900" style="color:var(--g600);font-weight:700;text-decoration:none;">+886 900 167 900</a></div>
+        <div style="margin-left:auto;display:flex;flex-wrap:wrap;gap:4px;">
+          <span class="tech-b">☀️ Solar PV</span><span class="tech-b">🌱 ESG</span><span class="tech-b">⚡ Green Electricity</span><span class="tech-b">🏗️ EPC Projects</span><span class="tech-b">📜 RECs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- NEW CASE -->
+<div class="overlay" id="modal-case">
+  <div class="modal">
+    <div class="m-head"><div class="m-title">New Energy Project Case</div><button class="m-close" onclick="closeModal('modal-case')">✕</button></div>
+    <div class="m-body">
+      <div class="fg">
+        <div class="fgrp span2"><label class="flbl">Project Name</label><input class="finp" id="cs-name" placeholder="e.g. Tainan Agricultural Solar Phase 1"></div>
+        <div class="fgrp"><label class="flbl">Client / Developer</label><input class="finp" id="cs-client" placeholder="e.g. Green Farm Co."></div>
+        <div class="fgrp">
+          <label class="flbl">Project Type</label>
+          <select class="fsel" id="cs-type"><option>Rooftop Solar</option><option>Ground-Mount Solar</option><option>Agricultural Solar (Agrivoltaic)</option><option>Floating Solar</option><option>Wind Energy</option><option>Energy Storage</option><option>Hybrid System</option><option>Other</option></select>
+        </div>
+        <div class="fgrp span2"><label class="flbl">Site Location</label><input class="finp" id="cs-location" placeholder="e.g. Tainan City, Shanhua District"></div>
+        <div class="fgrp"><label class="flbl">Capacity (kW)</label><input class="finp" id="cs-capacity" type="number" placeholder="e.g. 500"></div>
+        <div class="fgrp"><label class="flbl">Start Date</label><input class="finp" id="cs-start" type="date"></div>
+        <div class="fgrp"><label class="flbl">Target Completion</label><input class="finp" id="cs-end" type="date"></div>
+        <div class="fgrp"><label class="flbl">Progress (%)</label><input class="finp" id="cs-progress" type="number" min="0" max="100" placeholder="0"></div>
+        <div class="fgrp">
+          <label class="flbl">Status</label>
+          <select class="fsel" id="cs-status"><option>Site Survey</option><option>Permitting</option><option>Design</option><option>Procurement</option><option>Construction</option><option>Commissioning</option><option>Completed</option><option>On Hold</option></select>
+        </div>
+        <div class="fgrp full"><label class="flbl">Notes</label><textarea class="ftxt" id="cs-notes" placeholder="Case description, key contacts, special requirements…"></textarea></div>
+      </div>
+    </div>
+    <div class="m-foot"><button class="btn btn-o" onclick="closeModal('modal-case')">Cancel</button><button class="btn btn-g" onclick="saveCase()">Save Case</button></div>
+  </div>
+</div>
+
+<!-- CASE INFO -->
+<div class="overlay" id="modal-caseinfo">
+  <div class="modal">
+    <div class="m-head"><div class="m-title">Collect Basic Case Information</div><button class="m-close" onclick="closeModal('modal-caseinfo')">✕</button></div>
+    <div class="m-body">
+      <div class="fg">
+        <div class="fgrp"><label class="flbl">Client Name</label><input class="finp" id="ci-client" placeholder="e.g. Sunrise Agriculture Ltd"></div>
+        <div class="fgrp"><label class="flbl">Contact Person</label><input class="finp" id="ci-contact" placeholder="e.g. Mr. Chen Wei-Ming"></div>
+        <div class="fgrp"><label class="flbl">Phone / Email</label><input class="finp" id="ci-phone" placeholder="e.g. 0912-345-678"></div>
+        <div class="fgrp full"><label class="flbl">Site Address</label><input class="finp" id="ci-address" placeholder="Full address of the proposed installation site"></div>
+        <div class="fgrp">
+          <label class="flbl">Roof / Land Type</label>
+          <select class="fsel" id="ci-rooftype"><option>Flat Roof (RC)</option><option>Pitched Roof (Steel)</option><option>Agricultural Land</option><option>Fish Pond</option><option>Open Ground</option><option>Parking Canopy</option><option>Other</option></select>
+        </div>
+        <div class="fgrp"><label class="flbl">Est. Area (m²)</label><input class="finp" id="ci-area" type="number" placeholder="e.g. 2000"></div>
+        <div class="fgrp">
+          <label class="flbl">Status</label>
+          <select class="fsel" id="ci-status"><option>Collected</option><option>Pending Verification</option><option>Incomplete</option><option>Verified</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="m-foot"><button class="btn btn-o" onclick="closeModal('modal-caseinfo')">Cancel</button><button class="btn btn-g" onclick="saveCaseInfo()">Save Info</button></div>
+  </div>
+</div>
+
+<!-- EVALUATION -->
+<div class="overlay" id="modal-eval">
+  <div class="modal">
+    <div class="m-head"><div class="m-title">Add Case Evaluation</div><button class="m-close" onclick="closeModal('modal-eval')">✕</button></div>
+    <div class="m-body">
+      <div class="fg">
+        <div class="fgrp span2"><label class="flbl">Case / Client</label><input class="finp" id="ev-case" placeholder="e.g. QE-0001 / Green Farm Co."></div>
+        <div class="fgrp">
+          <label class="flbl">System Type</label>
+          <select class="fsel" id="ev-type"><option>Rooftop Solar</option><option>Ground-Mount Solar</option><option>Agricultural Solar</option><option>Floating Solar</option><option>Hybrid</option></select>
+        </div>
+        <div class="fgrp"><label class="flbl">Capacity (kW)</label><input class="finp" id="ev-capacity" type="number" placeholder="e.g. 300"></div>
+        <div class="fgrp"><label class="flbl">Est. Annual Gen. (kWh)</label><input class="finp" id="ev-gen" placeholder="e.g. 390,000"></div>
+        <div class="fgrp"><label class="flbl">Payback Period (yrs)</label><input class="finp" id="ev-payback" placeholder="e.g. 8.5"></div>
+        <div class="fgrp"><label class="flbl">IRR (%)</label><input class="finp" id="ev-irr" placeholder="e.g. 12.3"></div>
+        <div class="fgrp"><label class="flbl">Evaluator</label><input class="finp" id="ev-evaluator" placeholder="Name of evaluator"></div>
+        <div class="fgrp">
+          <label class="flbl">Status</label>
+          <select class="fsel" id="ev-status"><option>Draft</option><option>Under Review</option><option>Approved</option><option>Rejected</option><option>Revised</option></select>
+        </div>
+        <div class="fgrp full"><label class="flbl">Evaluation Summary</label><textarea class="ftxt" id="ev-notes" placeholder="Key findings, assumptions, risk factors…"></textarea></div>
+      </div>
+    </div>
+    <div class="m-foot"><button class="btn btn-o" onclick="closeModal('modal-eval')">Cancel</button><button class="btn btn-g" onclick="saveEval()">Save Evaluation</button></div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="overlay" id="modal-quote">
+  <div class="modal">
+    <div class="m-head"><div class="m-title">New Project Quotation</div><button class="m-close" onclick="closeModal('modal-quote')">✕</button></div>
+    <div class="m-body">
+      <div class="fg">
+        <div class="fgrp span2"><label class="flbl">Client Name</label><input class="finp" id="qt-client" placeholder="e.g. Green Farm Co."></div>
+        <div class="fgrp">
+          <label class="flbl">System Type</label>
+          <select class="fsel" id="qt-systype"><option>Rooftop Solar</option><option>Ground-Mount Solar</option><option>Agricultural Solar</option><option>Floating Solar</option><option>Hybrid</option></select>
+        </div>
+        <div class="fgrp"><label class="flbl">Capacity (kW)</label><input class="finp" id="qt-capacity" type="number" placeholder="e.g. 500"></div>
+        <div class="fgrp"><label class="flbl">Total Price (NTD)</label><input class="finp" id="qt-price" placeholder="e.g. 15,000,000"></div>
+        <div class="fgrp"><label class="flbl">Valid Until</label><input class="finp" id="qt-valid" type="date"></div>
+        <div class="fgrp">
+          <label class="flbl">Status</label>
+          <select class="fsel" id="qt-status"><option>Pending Confirmation</option><option>Under Negotiation</option><option>Accepted</option><option>Rejected</option></select>
+        </div>
+        <div class="fgrp full"><label class="flbl">Scope &amp; Remarks</label><textarea class="ftxt" id="qt-remarks" placeholder="Scope of work, payment terms, warranty, special conditions…"></textarea></div>
+      </div>
+    </div>
+    <div class="m-foot"><button class="btn btn-o" onclick="closeModal('modal-quote')">Cancel</button><button class="btn btn-g" onclick="saveQuote()">Issue Quotation</button></div>
+  </div>
+</div>
+
+<!-- BRIEFING -->
+<div class="overlay" id="modal-brief">
+  <div class="modal">
+    <div class="m-head"><div class="m-title">New Business Briefing</div><button class="m-close" onclick="closeModal('modal-brief')">✕</button></div>
+    <div class="m-body">
+      <div class="fg">
+        <div class="fgrp full"><label class="flbl">Briefing Title</label><input class="finp" id="br-title" placeholder="e.g. Q2 2026 Solar Pipeline Overview"></div>
+        <div class="fgrp"><label class="flbl">Related Case / Project</label><input class="finp" id="br-case" placeholder="e.g. QE-0002"></div>
+        <div class="fgrp"><label class="flbl">Target Audience</label><input class="finp" id="br-audience" placeholder="e.g. CEO, Investors, Client"></div>
+        <div class="fgrp">
+          <label class="flbl">Format</label>
+          <select class="fsel" id="br-format"><option>PowerPoint Presentation</option><option>PDF Report</option><option>One-Page Summary</option><option>Dashboard</option><option>Video</option><option>Other</option></select>
+        </div>
+        <div class="fgrp"><label class="flbl">Prepared By</label><input class="finp" id="br-prepby" placeholder="Your name"></div>
+        <div class="fgrp"><label class="flbl">Presentation Date</label><input class="finp" id="br-date" type="date"></div>
+        <div class="fgrp">
+          <label class="flbl">Status</label>
+          <select class="fsel" id="br-status"><option>Draft</option><option>In Review</option><option>Final</option><option>Presented</option></select>
+        </div>
+        <div class="fgrp full"><label class="flbl">Key Messages</label><textarea class="ftxt" id="br-notes" placeholder="Outline key points, objectives, and data to be presented…"></textarea></div>
+      </div>
+    </div>
+    <div class="m-foot"><button class="btn btn-o" onclick="closeModal('modal-brief')">Cancel</button><button class="btn btn-g" onclick="saveBriefing()">Save Briefing</button></div>
+  </div>
+</div>
+
+<!-- REPORT -->
+<div class="overlay" id="modal-report">
+  <div class="modal">
+    <div class="m-head"><div class="m-title">Prepare Business Report</div><button class="m-close" onclick="closeModal('modal-report')">✕</button></div>
+    <div class="m-body">
+      <div class="fg">
+        <div class="fgrp full"><label class="flbl">Report Title</label><input class="finp" id="rp-title" placeholder="e.g. Monthly Business Development Report – June 2026"></div>
+        <div class="fgrp">
+          <label class="flbl">Report Type</label>
+          <select class="fsel" id="rp-type"><option>Monthly Business Report</option><option>Quarterly Review</option><option>Annual Report</option><option>ESG Report</option><option>Project Status Report</option><option>Market Intelligence</option><option>Other</option></select>
+        </div>
+        <div class="fgrp"><label class="flbl">Period Covered</label><input class="finp" id="rp-period" placeholder="e.g. June 2026"></div>
+        <div class="fgrp"><label class="flbl">Prepared By</label><input class="finp" id="rp-prepby" placeholder="Your name"></div>
+        <div class="fgrp span2"><label class="flbl">Distributed To</label><input class="finp" id="rp-dist" placeholder="e.g. CEO, Management Team"></div>
+        <div class="fgrp"><label class="flbl">Distribution Date</label><input class="finp" id="rp-date" type="date"></div>
+        <div class="fgrp">
+          <label class="flbl">Status</label>
+          <select class="fsel" id="rp-status"><option>Draft</option><option>Under Review</option><option>Final</option><option>Distributed</option></select>
+        </div>
+        <div class="fgrp full"><label class="flbl">Report Summary</label><textarea class="ftxt" id="rp-notes" placeholder="Key findings, highlights, and recommendations from this report…"></textarea></div>
+      </div>
+    </div>
+    <div class="m-foot"><button class="btn btn-o" onclick="closeModal('modal-report')">Cancel</button><button class="btn btn-g" onclick="saveReport()">Save Report</button></div>
+  </div>
+</div>
+
+<!-- INSPECTION -->
+<div class="overlay" id="modal-insp">
+  <div class="modal">
+    <div class="m-head"><div class="m-title">Log Site Inspection</div><button class="m-close" onclick="closeModal('modal-insp')">✕</button></div>
+    <div class="m-body">
+      <div class="fg">
+        <div class="fgrp span2"><label class="flbl">Case / Project</label><input class="finp" id="in-case" placeholder="e.g. QE-0003 / Solar Farm Tainan"></div>
+        <div class="fgrp full"><label class="flbl">Site Address</label><input class="finp" id="in-address" placeholder="Full site address"></div>
+        <div class="fgrp"><label class="flbl">Inspector Name</label><input class="finp" id="in-inspector" placeholder="e.g. Bandile Dlamini"></div>
+        <div class="fgrp"><label class="flbl">Visit Date</label><input class="finp" id="in-date" type="date"></div>
+        <div class="fgrp">
+          <label class="flbl">Inspection Type</label>
+          <select class="fsel" id="in-type"><option>Initial Site Survey</option><option>Feasibility Assessment</option><option>Pre-Construction</option><option>Construction Progress</option><option>Final Commissioning</option><option>Maintenance Check</option><option>Other</option></select>
+        </div>
+        <div class="fgrp">
+          <label class="flbl">Solar Technology</label>
+          <select class="fsel" id="in-tech"><option>Monocrystalline PV</option><option>Polycrystalline PV</option><option>Bifacial PV</option><option>Thin Film</option><option>BIPV</option><option>Tracker System</option><option>Battery Storage</option><option>Inverter / Grid</option><option>N/A</option></select>
+        </div>
+        <div class="fgrp">
+          <label class="flbl">Key Finding</label>
+          <select class="fsel" id="in-finding"><option>Suitable for Installation</option><option>Requires Further Assessment</option><option>Structural Concern</option><option>Shading Issue</option><option>Grid Connection Issue</option><option>Permit Issue</option><option>Passed</option><option>Failed</option></select>
+        </div>
+        <div class="fgrp">
+          <label class="flbl">Status</label>
+          <select class="fsel" id="in-status"><option>Scheduled</option><option>Completed</option><option>Follow-Up Required</option><option>Report Pending</option></select>
+        </div>
+        <div class="fgrp full"><label class="flbl">Inspection Notes</label><textarea class="ftxt" id="in-notes" placeholder="Detailed observations, measurements, issues found, recommendations…"></textarea></div>
+      </div>
+    </div>
+    <div class="m-foot"><button class="btn btn-o" onclick="closeModal('modal-insp')">Cancel</button><button class="btn btn-g" onclick="saveInspection()">Save Inspection</button></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-c" id="toast-c"></div>
+
+<script>
+// ─── STATE ───────────────────────────────────────
+const S = { cases:[], caseinfos:[], evals:[], quotes:[], briefings:[], reports:[], inspections:[] };
+let counters = { cs:1, ci:1, ev:1, qt:1, br:1, rp:1, ins:1 };
+
+// ─── CLOCK ───────────────────────────────────────
+function tick(){ document.getElementById('clk').textContent = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
+setInterval(tick,1000); tick();
+document.getElementById('dash-date').textContent = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+
+// ─── NAVIGATION ──────────────────────────────────
+function nav(id) {
+  // hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // deactivate all nav items
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  // show target page
+  const pg = document.getElementById('page-' + id);
+  if (pg) pg.classList.add('active');
+  // activate nav item
+  const ni = document.getElementById('nav-' + id);
+  if (ni) ni.classList.add('active');
+  // reset market tab add button label
+  if (id === 'market') updateMktBtn();
+}
+
+// ─── TABS ─────────────────────────────────────────
+const mktBtns = { info: 'Collect Info', evals: 'Add Evaluation', quotes: 'New Quote' };
+const mktModals = { info: 'modal-caseinfo', evals: 'modal-eval', quotes: 'modal-quote' };
+let mktActive = 'info';
+
+function switchTab(group, tabId, btn) {
+  const container = btn.closest('.page') || btn.closest('.pb') || document;
+  // deactivate sibling tab buttons
+  btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // hide all tab contents in same page
+  document.querySelectorAll('#page-' + group + ' .tab-c').forEach(c => c.classList.remove('active'));
+  const tc = document.getElementById(group + '-' + tabId);
+  if (tc) tc.classList.add('active');
+  // update add button for market page
+  if (group === 'mkt') { mktActive = tabId; updateMktBtn(); }
+}
+
+function updateMktBtn() {
+  const btn = document.getElementById('mkt-add-btn');
+  if (btn) { btn.lastChild.textContent = mktBtns[mktActive] || 'Add'; btn.onclick = () => openModal(mktModals[mktActive]); }
+}
+
+// ─── MODALS ──────────────────────────────────────
+function openModal(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.add('open');
+}
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+// close on backdrop click
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+
+// ─── TOAST ───────────────────────────────────────
+function toast(msg, type) {
+  const t = document.createElement('div');
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>${msg}`;
+  document.getElementById('toast-c').appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+
+// ─── HELPERS ─────────────────────────────────────
+function today() { return new Date().toISOString().split('T')[0]; }
+function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function clrFields(ids) { ids.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; }); }
+function pad(n, p) { return String(n).padStart(p, '0'); }
+
+// ─── BADGE HELPER ────────────────────────────────
+function badge(s) {
+  const map = {
+    'Site Survey':'ba','Permitting':'ba','Design':'bb','Procurement':'bb',
+    'Construction':'bd','Commissioning':'bg','Completed':'bg','On Hold':'bs',
+    'Draft':'bs','Under Review':'ba','Approved':'bg','Rejected':'br','Revised':'ba',
+    'Final':'bg','Presented':'bg','In Review':'ba',
+    'Pending Confirmation':'ba','Under Negotiation':'ba','Accepted':'bg',
+    'Collected':'bg','Verified':'bg','Pending Verification':'ba','Incomplete':'br',
+    'Scheduled':'ba','Follow-Up Required':'br','Report Pending':'ba','Distributed':'bg',
+  };
+  return `<span class="badge ${map[s]||'bs'}">${s}</span>`;
+}
+
+// ─── PROGRESS RENDER ─────────────────────────────
+function prog(pct) {
+  const p = Math.min(100, Math.max(0, parseInt(pct) || 0));
+  const cls = p >= 75 ? '' : p >= 40 ? 'pa' : 'ps';
+  return `<div style="display:flex;align-items:center;gap:7px;"><div class="prog-w"><div class="prog-f ${cls}" style="width:${p}%"></div></div><span style="font-size:11px;color:var(--s500);">${p}%</span></div>`;
+}
+
+// ─── ACTIVITY FEED ────────────────────────────────
+function pushActivity(icon, title, sub, badgeCls, badgeText) {
+  const feed = document.getElementById('activity-feed');
+  const el = document.createElement('div');
+  el.className = 'li-item';
+  el.innerHTML = `<div class="li-ico ${icon.cls}">${icon.svg}</div><div class="li-body"><div class="li-t">${title}</div><div class="li-s">${sub}</div></div><span class="badge ${badgeCls}" style="margin-left:auto;flex-shrink:0;">${badgeText}</span>`;
+  feed.insertBefore(el, feed.firstChild);
+}
+
+// ─── UPDATE KPIS ─────────────────────────────────
+function updateKPIs() {
+  const active = S.cases.filter(c => c.status !== 'Completed' && c.status !== 'On Hold').length;
+  const done   = S.cases.filter(c => c.status === 'Completed').length;
+  const accepted = S.quotes.filter(q => q.status === 'Accepted').length;
+  const inspDone = S.inspections.filter(i => i.status === 'Completed').length;
+
+  document.getElementById('kpi-cases').textContent = S.cases.length;
+  document.getElementById('kpi-market').textContent = S.evals.length;
+  document.getElementById('kpi-briefings').textContent = S.briefings.length;
+  document.getElementById('kpi-inspections').textContent = inspDone;
+
+  document.getElementById('nc-cases').textContent = S.cases.length;
+  document.getElementById('nc-market').textContent = S.evals.length + S.quotes.length;
+  document.getElementById('nc-briefings').textContent = S.briefings.length;
+  document.getElementById('nc-reports').textContent = S.reports.length;
+  document.getElementById('nc-inspections').textContent = S.inspections.length;
+
+  document.getElementById('rc-total').textContent = S.cases.length;
+  document.getElementById('rc-active').textContent = active;
+  document.getElementById('rc-done').textContent = done;
+  document.getElementById('rc-evals').textContent = S.evals.length;
+  document.getElementById('rc-quotes').textContent = S.quotes.length;
+  document.getElementById('rc-accepted').textContent = accepted;
+}
+
+// ─── ADD NOTE ────────────────────────────────────
+function addNote(listId, inputId) {
+  const input = document.getElementById(inputId);
+  const text = input ? input.value.trim() : '';
+  if (!text) { toast('Please enter a note', 'err'); return; }
+  const li = document.createElement('li');
+  li.className = 'entry-item';
+  li.innerHTML = `<div class="e-dot"></div><div class="e-txt">${text}</div><div class="e-date">${today()}</div><button class="e-del" onclick="this.closest('li').remove()" title="Remove">✕</button>`;
+  document.getElementById(listId).appendChild(li);
+  input.value = '';
+  toast('Note added', 'ok');
+}
+
+// ─── SAVE CASE ───────────────────────────────────
+function saveCase() {
+  const name = v('cs-name');
+  if (!name) { toast('Please enter a project name', 'err'); return; }
+  const obj = { id: counters.cs++, name, client: v('cs-client'), type: v('cs-type'), location: v('cs-location'), capacity: v('cs-capacity'), start: v('cs-start'), end: v('cs-end'), progress: v('cs-progress') || '0', status: v('cs-status') };
+  S.cases.push(obj);
+
+  const tb = document.getElementById('tb-cases');
+  if (tb.querySelector('.empty-row')) tb.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><strong>QE-${pad(obj.id,4)}</strong></td><td>${obj.name}</td><td>${obj.client||'—'}</td><td><span class="badge bg">${obj.type}</span></td><td>${obj.location||'—'}</td><td>${obj.capacity ? obj.capacity+' kW' : '—'}</td><td>${prog(obj.progress)}</td><td>${badge(obj.status)}</td>`;
+  tb.appendChild(tr);
+
+  pushActivity({cls:'lg',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" width="14" height="14"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>'}, 'New Case: '+obj.name, obj.client||'No client', 'bg', obj.status);
+  closeModal('modal-case');
+  toast('Case saved', 'ok');
+  updateKPIs();
+  clrFields(['cs-name','cs-client','cs-location','cs-capacity','cs-notes']);
+}
+
+// ─── SAVE CASE INFO ──────────────────────────────
+function saveCaseInfo() {
+  const client = v('ci-client');
+  if (!client) { toast('Please enter client name', 'err'); return; }
+  const obj = { id: counters.ci++, client, contact: v('ci-contact'), phone: v('ci-phone'), address: v('ci-address'), rooftype: v('ci-rooftype'), area: v('ci-area'), status: v('ci-status'), date: today() };
+  S.caseinfos.push(obj);
+
+  const tb = document.getElementById('tb-caseinfo');
+  if (tb.querySelector('.empty-row')) tb.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><strong>CI-${pad(obj.id,3)}</strong></td><td>${obj.client}</td><td>${obj.contact||'—'}${obj.phone?' / '+obj.phone:''}</td><td>${obj.address||'—'}</td><td>${obj.rooftype}</td><td>${obj.area ? obj.area+' m²' : '—'}</td><td>${obj.date}</td><td>${badge(obj.status)}</td>`;
+  tb.appendChild(tr);
+
+  closeModal('modal-caseinfo');
+  toast('Case info saved', 'ok');
+  updateKPIs();
+  clrFields(['ci-client','ci-contact','ci-phone','ci-address','ci-area']);
+}
+
+// ─── SAVE EVAL ───────────────────────────────────
+function saveEval() {
+  const caseRef = v('ev-case');
+  if (!caseRef) { toast('Please enter case reference', 'err'); return; }
+  const obj = { id: counters.ev++, caseRef, type: v('ev-type'), capacity: v('ev-capacity'), gen: v('ev-gen'), payback: v('ev-payback'), irr: v('ev-irr'), evaluator: v('ev-evaluator'), status: v('ev-status') };
+  S.evals.push(obj);
+
+  const tb = document.getElementById('tb-evals');
+  if (tb.querySelector('.empty-row')) tb.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><strong>EV-${pad(obj.id,3)}</strong></td><td>${obj.caseRef}</td><td>${obj.type}</td><td>${obj.capacity ? obj.capacity+' kW' : '—'}</td><td>${obj.gen||'—'}</td><td>${obj.payback||'—'}</td><td>${obj.irr||'—'}</td><td>${badge(obj.status)}</td>`;
+  tb.appendChild(tr);
+
+  pushActivity({cls:'ls',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="var(--s600)" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'}, 'Evaluation: '+obj.caseRef, obj.type + (obj.capacity ? ', '+obj.capacity+' kW' : ''), 'ba', obj.status);
+  closeModal('modal-eval');
+  toast('Evaluation saved', 'ok');
+  updateKPIs();
+  clrFields(['ev-case','ev-capacity','ev-gen','ev-payback','ev-irr','ev-evaluator','ev-notes']);
+}
+
+// ─── SAVE QUOTE ──────────────────────────────────
+function saveQuote() {
+  const client = v('qt-client');
+  if (!client) { toast('Please enter client name', 'err'); return; }
+  const obj = { id: counters.qt++, client, systype: v('qt-systype'), capacity: v('qt-capacity'), price: v('qt-price'), valid: v('qt-valid'), status: v('qt-status'), date: today() };
+  S.quotes.push(obj);
+
+  const tb = document.getElementById('tb-quotes');
+  if (tb.querySelector('.empty-row')) tb.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><strong>QT-${pad(obj.id,4)}</strong></td><td>${obj.client}</td><td>${obj.systype}</td><td>${obj.capacity ? obj.capacity+' kW' : '—'}</td><td>${obj.price ? 'NTD '+obj.price : '—'}</td><td>${obj.valid||'—'}</td><td>${obj.date}</td><td>${badge(obj.status)}</td>`;
+  tb.appendChild(tr);
+
+  pushActivity({cls:'lg',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'}, 'Quote: '+obj.client, obj.systype + (obj.capacity ? ' · '+obj.capacity+' kW' : ''), 'ba', obj.status);
+  closeModal('modal-quote');
+  toast('Quotation issued', 'ok');
+  updateKPIs();
+  clrFields(['qt-client','qt-capacity','qt-price','qt-remarks']);
+}
+
+// ─── SAVE BRIEFING ───────────────────────────────
+function saveBriefing() {
+  const title = v('br-title');
+  if (!title) { toast('Please enter briefing title', 'err'); return; }
+  const obj = { id: counters.br++, title, caseRef: v('br-case'), audience: v('br-audience'), format: v('br-format'), prepby: v('br-prepby'), date: v('br-date') || today(), status: v('br-status') };
+  S.briefings.push(obj);
+
+  const tb = document.getElementById('tb-briefings');
+  if (tb.querySelector('.empty-row')) tb.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><strong>BR-${pad(obj.id,3)}</strong></td><td>${obj.title}</td><td>${obj.caseRef||'—'}</td><td>${obj.audience||'—'}</td><td><span class="badge bb">${obj.format}</span></td><td>${obj.prepby||'—'}</td><td>${obj.date}</td><td>${badge(obj.status)}</td>`;
+  tb.appendChild(tr);
+
+  pushActivity({cls:'ls',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="var(--s600)" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>'}, 'Briefing: '+obj.title, obj.audience||'General', 'bb', obj.status);
+  closeModal('modal-brief');
+  toast('Briefing saved', 'ok');
+  updateKPIs();
+  clrFields(['br-title','br-case','br-audience','br-prepby','br-notes']);
+}
+
+// ─── SAVE REPORT ─────────────────────────────────
+function saveReport() {
+  const title = v('rp-title');
+  if (!title) { toast('Please enter report title', 'err'); return; }
+  const obj = { id: counters.rp++, title, type: v('rp-type'), period: v('rp-period'), prepby: v('rp-prepby'), dist: v('rp-dist'), date: v('rp-date') || today(), status: v('rp-status') };
+  S.reports.push(obj);
+
+  const tb = document.getElementById('tb-reports');
+  if (tb.querySelector('.empty-row')) tb.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><strong>RP-${pad(obj.id,3)}</strong></td><td>${obj.title}</td><td><span class="badge bs">${obj.type}</span></td><td>${obj.period||'—'}</td><td>${obj.prepby||'—'}</td><td>${obj.dist||'—'}</td><td>${obj.date}</td><td>${badge(obj.status)}</td>`;
+  tb.appendChild(tr);
+
+  closeModal('modal-report');
+  toast('Report saved', 'ok');
+  updateKPIs();
+  clrFields(['rp-title','rp-period','rp-prepby','rp-dist','rp-notes']);
+}
+
+// ─── SAVE INSPECTION ─────────────────────────────
+function saveInspection() {
+  const caseRef = v('in-case');
+  if (!caseRef) { toast('Please enter case reference', 'err'); return; }
+  const obj = { id: counters.ins++, caseRef, address: v('in-address'), inspector: v('in-inspector'), date: v('in-date') || today(), type: v('in-type'), tech: v('in-tech'), finding: v('in-finding'), status: v('in-status') };
+  S.inspections.push(obj);
+
+  const tb = document.getElementById('tb-inspections');
+  if (tb.querySelector('.empty-row')) tb.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><strong>IN-${pad(obj.id,3)}</strong></td><td>${obj.caseRef}</td><td>${obj.address||'—'}</td><td>${obj.inspector||'—'}</td><td>${obj.date}</td><td><span class="badge bs">${obj.type}</span></td><td><span class="badge bg">${obj.tech}</span></td><td>${obj.finding}</td><td>${badge(obj.status)}</td>`;
+  tb.appendChild(tr);
+
+  pushActivity({cls:'ls',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="var(--s600)" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'}, 'Inspection: '+obj.caseRef, obj.type + ' · ' + obj.finding, 'bs', obj.status);
+  closeModal('modal-insp');
+  toast('Inspection logged', 'ok');
+  updateKPIs();
+  clrFields(['in-case','in-address','in-inspector','in-notes']);
+}
+
+// ─── INIT ────────────────────────────────────────
+updateKPIs();
+</script>
+</body>
+</html>
